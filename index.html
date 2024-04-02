@@ -151,7 +151,7 @@
 
         // フォントファイルのURL
         const font_source_IPA = "LovyanGFX/src/Fonts/IPA/lgfx_font_japan.c";
-        const font_source_efont = "LovyanGFX/src/Fonts/efont/lgfx_efont_ja.c";
+        const font_source_efont = "LovyanGFX/src/Fonts/efont/lgfx_efont_cn.c";
 
         var font_master = new Map();    // 全フォント
         var subset_generator = null;    // サブセット生成器(FontFileGenerator)
@@ -197,26 +197,26 @@
         ]);
 
         const dictFontName_efont = new Map([
-            ["lgfx_efont_ja_10", { order: 1, name: "efontJA_10", desc: "レギュラー/10ピクセル" }],
-            ["lgfx_efont_ja_10_b", { order: 2, name: "efontJA_10_b", desc: "太字/10ピクセル" }],
-            ["lgfx_efont_ja_10_bi", { order: 3, name: "efontJA_10_bi", desc: "太字/斜体/10ピクセル" }],
-            ["lgfx_efont_ja_10_i", { order: 4, name: "efontJA_10_i", desc: "斜体/10ピクセル" }],
-            ["lgfx_efont_ja_12", { order: 5, name: "efontJA_12", desc: "レギュラー/12ピクセル" }],
-            ["lgfx_efont_ja_12_b", { order: 5, name: "efontJA_12_b", desc: "太字/12ピクセル" }],
-            ["lgfx_efont_ja_12_bi", { order: 6, name: "efontJA_12_bi", desc: "太字/斜体/12ピクセル" }],
-            ["lgfx_efont_ja_12_i", { order: 7, name: "efontJA_12_i", desc: "斜体/12ピクセル" }],
-            ["lgfx_efont_ja_14", { order: 9, name: "efontJA_14", desc: "レギュラー/14ピクセル" }],
-            ["lgfx_efont_ja_14_b", { order: 10, name: "efontJA_14_b", desc: "太字/14ピクセル" }],
-            ["lgfx_efont_ja_14_bi", { order: 11, name: "efontJA_14_bi", desc: "太字/斜体/14ピクセル" }],
-            ["lgfx_efont_ja_14_i", { order: 12, name: "efontJA_14_i", desc: "斜体/14ピクセル" }],
-            ["lgfx_efont_ja_16", { order: 13, name: "efontJA_16", desc: "レギュラー/16ピクセル" }],
-            ["lgfx_efont_ja_16_b", { order: 14, name: "efontJA_16_b", desc: "太字/16ピクセル" }],
-            ["lgfx_efont_ja_16_bi", { order: 15, name: "efontJA_16_bi", desc: "太字/斜体/16ピクセル" }],
-            ["lgfx_efont_ja_16_i", { order: 16, name: "efontJA_16_i", desc: "斜体/16ピクセル" }],
-            ["lgfx_efont_ja_24", { order: 17, name: "efontJA_24", desc: "レギュラー/24ピクセル" }],
-            ["lgfx_efont_ja_24_b", { order: 18, name: "efontJA_24_b", desc: "太字/24ピクセル" }],
-            ["lgfx_efont_ja_24_bi", { order: 19, name: "efontJA_24_bi", desc: "太字/斜体/24ピクセル" }],
-            ["lgfx_efont_ja_24_i", { order: 20, name: "efontJA_24_i", desc: "斜体/24ピクセル" }]
+            ["lgfx_efont_cn_10", { order: 1, name: "efontCN_10", desc: "efontCN_10" }],
+            ["lgfx_efont_cn_10_b", { order: 2, name: "efontCN_10_b", desc: "efontCN_10_b" }],
+            ["lgfx_efont_cn_10_bi", { order: 3, name: "efontCN_10_bi", desc: "efontCN_10_bi" }],
+            ["lgfx_efont_cn_10_i", { order: 4, name: "efontCN_10_i", desc: "efontCN_10_i" }],
+            ["lgfx_efont_cn_12", { order: 5, name: "efontCN_12", desc: "efontCN_12" }],
+            ["lgfx_efont_cn_12_b", { order: 5, name: "efontCN_12_b", desc: "efontCN_12_b" }],
+            ["lgfx_efont_cn_12_bi", { order: 6, name: "efontCN_12_bi", desc: "efontCN_12_bi" }],
+            ["lgfx_efont_cn_12_i", { order: 7, name: "efontCN_12_i", desc: "efontCN_12_i" }],
+            ["lgfx_efont_cn_14", { order: 9, name: "efontCN_14", desc: "efontCN_14" }],
+            ["lgfx_efont_cn_14_b", { order: 10, name: "efontCN_14_b", desc: "efontCN_14_b" }],
+            ["lgfx_efont_cn_14_bi", { order: 11, name: "efontCN_14_bi", desc: "efontCN_14_bi" }],
+            ["lgfx_efont_cn_14_i", { order: 12, name: "efontCN_14_i", desc: "efontCN_14_i" }],
+            ["lgfx_efont_cn_16", { order: 13, name: "efontCN_16", desc: "efontCN_16" }],
+            ["lgfx_efont_cn_16_b", { order: 14, name: "efontCN_16_b", desc: "efontCN_16_b" }],
+            ["lgfx_efont_cn_16_bi", { order: 15, name: "efontCN_16_bi", desc: "efontCN_16_bi" }],
+            ["lgfx_efont_cn_16_i", { order: 16, name: "efontCN_16_i", desc: "efontCN_16_i" }],
+            ["lgfx_efont_cn_24", { order: 17, name: "efontCN_24", desc: "efontCN_24" }],
+            ["lgfx_efont_cn_24_b", { order: 18, name: "efontCN_24_b", desc: "efontCN_24_b" }],
+            ["lgfx_efont_cn_24_bi", { order: 19, name: "efontCN_24_bi", desc: "efontCN_24_bi" }],
+            ["lgfx_efont_cn_24_i", { order: 20, name: "efontCN_24_i", desc: "efontCN_24_i" }]
         ]);
 
         // フォントファイルの一覧
