@@ -1206,7 +1206,11 @@
         //     " };"
         // );
         lines.push(
-          "const size_t " + font_name + "_size = sizeof(" + font_name + ");"
+          "const size_t " +
+            font_name +
+            "_data_size = sizeof(" +
+            font_name +
+            "_data);"
         );
 
         lines.push("");
