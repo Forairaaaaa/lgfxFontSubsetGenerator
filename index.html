@@ -1,1020 +1,1572 @@
 ﻿<!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <script type="text/javascript" src="jquery-3.5.1.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body id="main">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body id="main">
     <div id="formMain">
-        <h1>日本語フォントサブセットジェネレーター for LovyanGFX</h1>
-        <div class="divGroup">
-            元となるフォントファイルを選んでください：<br />
-            <span style="vertical-align:middle"><input id="txtFontFile" type="text" readonly style="min-width:22rem" /><button id="btnSelectFontFile">フォントファイルを選ぶ</button></span>
-        </div>
-        <div class="divGroup">
-            フォントを選んでください：<br />
-            <span style="vertical-align:middle"><select id="selFont" style="min-width:22rem" disabled></select><button id="btnShowCharset" style="width:10rem" disabled>文字セットを見る</button></span>
-        </div>
-        <div class="divGroup">
-            <span style="vertical-align:middle">サブセットに含める文字を入力してください：&nbsp;<button id="btnUploadSubset">ファイルから読み込む</button></span><br />
-            <textarea id="txtSubset" cols="80" rows="10"></textarea>
-        </div>
-        <div class="divGroup">
-            生成するフォントの名前（変数名）を入力してください：<br />
-            <input type="text" id="txtSubsetName" style="width:15rem" value="myFont" /><span id="msgSubsetName" class="msgErrorMessage"></span>
-        </div>
-        <div class="divGroup">
-            <button id="btnGenerate" style="width:10rem" disabled>生成</button>
-            &nbsp;
-            <button id="btnDownload" style="width:10rem" disabled>ダウンロード</button>
-        </div>
-        <div id="divResult" class="divGroup">
-            処理結果：<br />
-            <textarea id="txtResult" cols="80" rows="10"></textarea>
-        </div>
+      <h1>日本語フォントサブセットジェネレーター for LovyanGFX</h1>
+      <div class="divGroup">
+        元となるフォントファイルを選んでください：<br />
+        <span style="vertical-align: middle"
+          ><input
+            id="txtFontFile"
+            type="text"
+            readonly
+            style="min-width: 22rem"
+          /><button id="btnSelectFontFile">フォントファイルを選ぶ</button></span
+        >
+      </div>
+      <div class="divGroup">
+        フォントを選んでください：<br />
+        <span style="vertical-align: middle"
+          ><select id="selFont" style="min-width: 22rem" disabled></select
+          ><button id="btnShowCharset" style="width: 10rem" disabled>
+            文字セットを見る
+          </button></span
+        >
+      </div>
+      <div class="divGroup">
+        <span style="vertical-align: middle"
+          >サブセットに含める文字を入力してください：&nbsp;<button
+            id="btnUploadSubset"
+          >
+            ファイルから読み込む
+          </button></span
+        ><br />
+        <textarea id="txtSubset" cols="80" rows="10"></textarea>
+      </div>
+      <div class="divGroup">
+        生成するフォントの名前（変数名）を入力してください：<br />
+        <input
+          type="text"
+          id="txtSubsetName"
+          style="width: 15rem"
+          value="myFont"
+        /><span id="msgSubsetName" class="msgErrorMessage"></span>
+      </div>
+      <div class="divGroup">
+        <button id="btnGenerate" style="width: 10rem" disabled>生成</button>
+        &nbsp;
+        <button id="btnDownload" style="width: 10rem" disabled>
+          ダウンロード
+        </button>
+      </div>
+      <div id="divResult" class="divGroup">
+        処理結果：<br />
+        <textarea id="txtResult" cols="80" rows="10"></textarea>
+      </div>
 
-        Copyright© 2020 YAMANEKO. All rights reserved.<br />
-        <a href="https://github.com/yamamaya/lgfxFontSubsetGenerator" target="_blank">https://github.com/yamamaya/lgfxFontSubsetGenerator</a>
+      Copyright© 2020 YAMANEKO. All rights reserved.<br />
+      <a
+        href="https://github.com/yamamaya/lgfxFontSubsetGenerator"
+        target="_blank"
+        >https://github.com/yamamaya/lgfxFontSubsetGenerator</a
+      >
     </div>
 
     <!-- フォントファイル選択用モーダルウィンドウ -->
     <div id="divModalFontFile" class="divModal">
-        <div class="divModalBG"></div>
-        <div id="divFontFileFrame" class="divModalFrame" style="width:40rem;height:27rem">
-            <div class="divModalHeader">
-                <div class="divModalCaption">フォントファイルを選択</div><div class="divCloseModal"><button id="btnCloseFontFile">&nbsp;閉じる&nbsp;</button></div>
-            </div>
-            <div id="divFontFileInnerFrame" class="divModalInnerFrame innerframe_middle" style="height:25rem">
-                <div class="divFontFileButton">
-                    <button id="btnSelect_IPAFont" class="btnFontFile">IPAフォント</button>
-                </div>
-                <div class="divFontFileDesc">
-                    文字情報技術促進協議会によって作成されたTrueTypeフォントをラスタライズしたフォントです。
-                    <table>
-                        <tr>
-                            <td>書体</td>
-                            <td>：</td>
-                            <td>ゴシック体 / 明朝体</td>
-                        </tr>
-                        <tr>
-                            <td>文字幅</td>
-                            <td>：</td>
-                            <td>等幅 / プロポーショナル</td>
-                        </tr>
-                        <tr>
-                            <td>書式</td>
-                            <td>：</td>
-                            <td>レギュラー</td>
-                        </tr>
-                        <tr>
-                            <td>サイズ</td>
-                            <td>：</td>
-                            <td>12,16,20,24,28,32,36,40</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="divFontFileButton">
-                    <button id="btnSelect_efont" class="btnFontFile">efont</button>
-                </div>
-                <div class="divFontFileDesc" style="margin-bottom:0">
-                    電子書体オープンラボによって作成されたビットマップフォントです。
-                    <table>
-                        <tr>
-                            <td>書体</td>
-                            <td>：</td>
-                            <td>ゴシック体</td>
-                        </tr>
-                        <tr>
-                            <td>文字幅</td>
-                            <td>：</td>
-                            <td>等幅</td>
-                        </tr>
-                        <tr>
-                            <td>書式</td>
-                            <td>：</td>
-                            <td>レギュラー / 太字 / 斜体 / 太字&amp;斜体</td>
-                        </tr>
-                        <tr>
-                            <td>サイズ</td>
-                            <td>：</td>
-                            <td>10,12,14,16,24</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+      <div class="divModalBG"></div>
+      <div
+        id="divFontFileFrame"
+        class="divModalFrame"
+        style="width: 40rem; height: 27rem"
+      >
+        <div class="divModalHeader">
+          <div class="divModalCaption">フォントファイルを選択</div>
+          <div class="divCloseModal">
+            <button id="btnCloseFontFile">&nbsp;閉じる&nbsp;</button>
+          </div>
         </div>
+        <div
+          id="divFontFileInnerFrame"
+          class="divModalInnerFrame innerframe_middle"
+          style="height: 25rem"
+        >
+          <div class="divFontFileButton">
+            <button id="btnSelect_IPAFont" class="btnFontFile">
+              IPAフォント
+            </button>
+          </div>
+          <div class="divFontFileDesc">
+            文字情報技術促進協議会によって作成されたTrueTypeフォントをラスタライズしたフォントです。
+            <table>
+              <tr>
+                <td>書体</td>
+                <td>：</td>
+                <td>ゴシック体 / 明朝体</td>
+              </tr>
+              <tr>
+                <td>文字幅</td>
+                <td>：</td>
+                <td>等幅 / プロポーショナル</td>
+              </tr>
+              <tr>
+                <td>書式</td>
+                <td>：</td>
+                <td>レギュラー</td>
+              </tr>
+              <tr>
+                <td>サイズ</td>
+                <td>：</td>
+                <td>12,16,20,24,28,32,36,40</td>
+              </tr>
+            </table>
+          </div>
+          <div class="divFontFileButton">
+            <button id="btnSelect_efont" class="btnFontFile">efont</button>
+          </div>
+          <div class="divFontFileDesc" style="margin-bottom: 0">
+            電子書体オープンラボによって作成されたビットマップフォントです。
+            <table>
+              <tr>
+                <td>書体</td>
+                <td>：</td>
+                <td>ゴシック体</td>
+              </tr>
+              <tr>
+                <td>文字幅</td>
+                <td>：</td>
+                <td>等幅</td>
+              </tr>
+              <tr>
+                <td>書式</td>
+                <td>：</td>
+                <td>レギュラー / 太字 / 斜体 / 太字&amp;斜体</td>
+              </tr>
+              <tr>
+                <td>サイズ</td>
+                <td>：</td>
+                <td>10,12,14,16,24</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 進捗表示用モーダルウィンドウ -->
     <div id="divModalProgress" class="divModal">
-        <div class="divModalBG"></div>
-        <div class="divModalFrame" style="width:30rem;height:5rem">
-            <div class="divModalHeader">
-                <div id="divModalCaption" class="divModalCaption">フォントファイルをダウンロードしています...</div><div class="divCloseModal">&nbsp;</div>
-            </div>
-            <div id="divProgressInnerFrame" class="divModalInnerFrame innerframe_middle" style="width:30rem;height:3rem;text-align:center">
-                <div style="border:1px solid black;width:30rem;">
-                    <div id="divProgressBar" style="background-color:darkturquoise;width:0%;position:absolute">&nbsp;</div>
-                    <div id="divProgressValue" style="position:relative">0%</div>
-                </div>
-            </div>
+      <div class="divModalBG"></div>
+      <div class="divModalFrame" style="width: 30rem; height: 5rem">
+        <div class="divModalHeader">
+          <div id="divModalCaption" class="divModalCaption">
+            フォントファイルをダウンロードしています...
+          </div>
+          <div class="divCloseModal">&nbsp;</div>
         </div>
+        <div
+          id="divProgressInnerFrame"
+          class="divModalInnerFrame innerframe_middle"
+          style="width: 30rem; height: 3rem; text-align: center"
+        >
+          <div style="border: 1px solid black; width: 30rem">
+            <div
+              id="divProgressBar"
+              style="
+                background-color: darkturquoise;
+                width: 0%;
+                position: absolute;
+              "
+            >
+              &nbsp;
+            </div>
+            <div id="divProgressValue" style="position: relative">0%</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 文字セット用モーダルウィンドウ -->
     <div id="divModalCharset" class="divModal">
-        <div class="divModalBG"></div>
-        <div class="divModalFrame" style="width:40rem;height:30rem">
-            <div class="divModalHeader">
-                <div id="divFontName" class="divModalCaption">(フォント名)</div><div class="divCloseModal"><button id="btnCloseCharset">&nbsp;閉じる&nbsp;</button></div>
-            </div>
-            <div id="divCharsetInnerFrame" class="divModalInnerFrame" style="height:28rem;overflow-y:scroll"></div>
+      <div class="divModalBG"></div>
+      <div class="divModalFrame" style="width: 40rem; height: 30rem">
+        <div class="divModalHeader">
+          <div id="divFontName" class="divModalCaption">(フォント名)</div>
+          <div class="divCloseModal">
+            <button id="btnCloseCharset">&nbsp;閉じる&nbsp;</button>
+          </div>
         </div>
+        <div
+          id="divCharsetInnerFrame"
+          class="divModalInnerFrame"
+          style="height: 28rem; overflow-y: scroll"
+        ></div>
+      </div>
     </div>
 
     <!-- アップロード用モーダルウィンドウ -->
     <div id="divModalUpload" class="divModal">
-        <div class="divModalBG"></div>
-        <div class="divModalFrame" style="width: 35rem;height: 8rem">
-            <div class="divModalHeader">
-                <div class="divModalCaption">ファイルから読み込む</div><div class="divCloseModal"><button id="btnCloseUpload">&nbsp;閉じる&nbsp;</button></div>
-            </div>
-            <div id="divUploadInnerFrame" class="divModalInnerFrame innerframe_middle" style="height:6rem">
-                サブセットに含める文字を列挙したファイルを指定してください：<br />
-                <input type="file" id="fileUpload" style="width:35rem;border: 1px solid black" />
-            </div>
+      <div class="divModalBG"></div>
+      <div class="divModalFrame" style="width: 35rem; height: 8rem">
+        <div class="divModalHeader">
+          <div class="divModalCaption">ファイルから読み込む</div>
+          <div class="divCloseModal">
+            <button id="btnCloseUpload">&nbsp;閉じる&nbsp;</button>
+          </div>
         </div>
+        <div
+          id="divUploadInnerFrame"
+          class="divModalInnerFrame innerframe_middle"
+          style="height: 6rem"
+        >
+          サブセットに含める文字を列挙したファイルを指定してください：<br />
+          <input
+            type="file"
+            id="fileUpload"
+            style="width: 35rem; border: 1px solid black"
+          />
+        </div>
+      </div>
     </div>
 
     <script language="javascript">
+      // フォントファイルのURL
+      const font_source_IPA = "LovyanGFX/src/Fonts/IPA/lgfx_font_japan.c";
+      const font_source_efont = "LovyanGFX/src/Fonts/efont/lgfx_efont_cn.c";
 
-        // フォントファイルのURL
-        const font_source_IPA = "LovyanGFX/src/Fonts/IPA/lgfx_font_japan.c";
-        const font_source_efont = "LovyanGFX/src/Fonts/efont/lgfx_efont_cn.c";
+      var font_master = new Map(); // 全フォント
+      var subset_generator = null; // サブセット生成器(FontFileGenerator)
 
-        var font_master = new Map();    // 全フォント
-        var subset_generator = null;    // サブセット生成器(FontFileGenerator)
+      // フォントの一覧
+      const dictFontName_IPA = new Map([
+        [
+          "lgfx_font_japan_gothic_8",
+          {
+            order: 1,
+            name: "lgfxJapanGothic_8",
+            desc: "ゴシック体/等幅/8ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_12",
+          {
+            order: 2,
+            name: "lgfxJapanGothic_12",
+            desc: "ゴシック体/等幅/12ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_16",
+          {
+            order: 3,
+            name: "lgfxJapanGothic_16",
+            desc: "ゴシック体/等幅/16ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_20",
+          {
+            order: 4,
+            name: "lgfxJapanGothic_20",
+            desc: "ゴシック体/等幅/20ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_24",
+          {
+            order: 5,
+            name: "lgfxJapanGothic_24",
+            desc: "ゴシック体/等幅/24ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_28",
+          {
+            order: 6,
+            name: "lgfxJapanGothic_28",
+            desc: "ゴシック体/等幅/28ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_32",
+          {
+            order: 7,
+            name: "lgfxJapanGothic_32",
+            desc: "ゴシック体/等幅/32ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_36",
+          {
+            order: 8,
+            name: "lgfxJapanGothic_36",
+            desc: "ゴシック体/等幅/36ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_40",
+          {
+            order: 9,
+            name: "lgfxJapanGothic_40",
+            desc: "ゴシック体/等幅/40ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_8",
+          {
+            order: 10,
+            name: "lgfxJapanGothicP_8",
+            desc: "ゴシック体/プロポーショナル/8ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_12",
+          {
+            order: 11,
+            name: "lgfxJapanGothicP_12",
+            desc: "ゴシック体/プロポーショナル/12ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_16",
+          {
+            order: 12,
+            name: "lgfxJapanGothicP_16",
+            desc: "ゴシック体/プロポーショナル/16ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_20",
+          {
+            order: 13,
+            name: "lgfxJapanGothicP_20",
+            desc: "ゴシック体/プロポーショナル/20ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_24",
+          {
+            order: 14,
+            name: "lgfxJapanGothicP_24",
+            desc: "ゴシック体/プロポーショナル/24ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_28",
+          {
+            order: 15,
+            name: "lgfxJapanGothicP_28",
+            desc: "ゴシック体/プロポーショナル/28ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_32",
+          {
+            order: 16,
+            name: "lgfxJapanGothicP_32",
+            desc: "ゴシック体/プロポーショナル/32ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_36",
+          {
+            order: 17,
+            name: "lgfxJapanGothicP_36",
+            desc: "ゴシック体/プロポーショナル/36ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_gothic_p_40",
+          {
+            order: 18,
+            name: "lgfxJapanGothicP_40",
+            desc: "ゴシック体/プロポーショナル/40ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_8",
+          {
+            order: 19,
+            name: "lgfxJapanMincho_8",
+            desc: "明朝体/等幅/8ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_12",
+          {
+            order: 20,
+            name: "lgfxJapanMincho_12",
+            desc: "明朝体/等幅/12ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_16",
+          {
+            order: 21,
+            name: "lgfxJapanMincho_16",
+            desc: "明朝体/等幅/16ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_20",
+          {
+            order: 22,
+            name: "lgfxJapanMincho_20",
+            desc: "明朝体/等幅/20ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_24",
+          {
+            order: 23,
+            name: "lgfxJapanMincho_24",
+            desc: "明朝体/等幅/24ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_28",
+          {
+            order: 24,
+            name: "lgfxJapanMincho_28",
+            desc: "明朝体/等幅/28ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_32",
+          {
+            order: 25,
+            name: "lgfxJapanMincho_32",
+            desc: "明朝体/等幅/32ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_36",
+          {
+            order: 26,
+            name: "lgfxJapanMincho_36",
+            desc: "明朝体/等幅/36ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_40",
+          {
+            order: 27,
+            name: "lgfxJapanMincho_40",
+            desc: "明朝体/等幅/40ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_8",
+          {
+            order: 28,
+            name: "lgfxJapanMinchoP_8",
+            desc: "明朝体/プロポーショナル/8ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_12",
+          {
+            order: 29,
+            name: "lgfxJapanMinchoP_12",
+            desc: "明朝体/プロポーショナル/12ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_16",
+          {
+            order: 30,
+            name: "lgfxJapanMinchoP_16",
+            desc: "明朝体/プロポーショナル/16ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_20",
+          {
+            order: 31,
+            name: "lgfxJapanMinchoP_20",
+            desc: "明朝体/プロポーショナル/20ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_24",
+          {
+            order: 32,
+            name: "lgfxJapanMinchoP_24",
+            desc: "明朝体/プロポーショナル/24ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_28",
+          {
+            order: 33,
+            name: "lgfxJapanMinchoP_28",
+            desc: "明朝体/プロポーショナル/28ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_32",
+          {
+            order: 34,
+            name: "lgfxJapanMinchoP_32",
+            desc: "明朝体/プロポーショナル/32ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_36",
+          {
+            order: 35,
+            name: "lgfxJapanMinchoP_36",
+            desc: "明朝体/プロポーショナル/36ピクセル",
+          },
+        ],
+        [
+          "lgfx_font_japan_mincho_p_40",
+          {
+            order: 36,
+            name: "lgfxJapanMinchoP_40",
+            desc: "明朝体/プロポーショナル/40ピクセル",
+          },
+        ],
+      ]);
 
-        // フォントの一覧
-        const dictFontName_IPA = new Map([
-            ["lgfx_font_japan_gothic_8", { order: 1, name: "lgfxJapanGothic_8", desc: "ゴシック体/等幅/8ピクセル" }],
-            ["lgfx_font_japan_gothic_12", { order: 2, name: "lgfxJapanGothic_12", desc: "ゴシック体/等幅/12ピクセル" }],
-            ["lgfx_font_japan_gothic_16", { order: 3, name: "lgfxJapanGothic_16", desc: "ゴシック体/等幅/16ピクセル" }],
-            ["lgfx_font_japan_gothic_20", { order: 4, name: "lgfxJapanGothic_20", desc: "ゴシック体/等幅/20ピクセル" }],
-            ["lgfx_font_japan_gothic_24", { order: 5, name: "lgfxJapanGothic_24", desc: "ゴシック体/等幅/24ピクセル" }],
-            ["lgfx_font_japan_gothic_28", { order: 6, name: "lgfxJapanGothic_28", desc: "ゴシック体/等幅/28ピクセル" }],
-            ["lgfx_font_japan_gothic_32", { order: 7, name: "lgfxJapanGothic_32", desc: "ゴシック体/等幅/32ピクセル" }],
-            ["lgfx_font_japan_gothic_36", { order: 8, name: "lgfxJapanGothic_36", desc: "ゴシック体/等幅/36ピクセル" }],
-            ["lgfx_font_japan_gothic_40", { order: 9, name: "lgfxJapanGothic_40", desc: "ゴシック体/等幅/40ピクセル" }],
-            ["lgfx_font_japan_gothic_p_8", { order: 10, name: "lgfxJapanGothicP_8", desc: "ゴシック体/プロポーショナル/8ピクセル" }],
-            ["lgfx_font_japan_gothic_p_12", { order: 11, name: "lgfxJapanGothicP_12", desc: "ゴシック体/プロポーショナル/12ピクセル" }],
-            ["lgfx_font_japan_gothic_p_16", { order: 12, name: "lgfxJapanGothicP_16", desc: "ゴシック体/プロポーショナル/16ピクセル" }],
-            ["lgfx_font_japan_gothic_p_20", { order: 13, name: "lgfxJapanGothicP_20", desc: "ゴシック体/プロポーショナル/20ピクセル" }],
-            ["lgfx_font_japan_gothic_p_24", { order: 14, name: "lgfxJapanGothicP_24", desc: "ゴシック体/プロポーショナル/24ピクセル" }],
-            ["lgfx_font_japan_gothic_p_28", { order: 15, name: "lgfxJapanGothicP_28", desc: "ゴシック体/プロポーショナル/28ピクセル" }],
-            ["lgfx_font_japan_gothic_p_32", { order: 16, name: "lgfxJapanGothicP_32", desc: "ゴシック体/プロポーショナル/32ピクセル" }],
-            ["lgfx_font_japan_gothic_p_36", { order: 17, name: "lgfxJapanGothicP_36", desc: "ゴシック体/プロポーショナル/36ピクセル" }],
-            ["lgfx_font_japan_gothic_p_40", { order: 18, name: "lgfxJapanGothicP_40", desc: "ゴシック体/プロポーショナル/40ピクセル" }],
-            ["lgfx_font_japan_mincho_8", { order: 19, name: "lgfxJapanMincho_8", desc: "明朝体/等幅/8ピクセル" }],
-            ["lgfx_font_japan_mincho_12", { order: 20, name: "lgfxJapanMincho_12", desc: "明朝体/等幅/12ピクセル" }],
-            ["lgfx_font_japan_mincho_16", { order: 21, name: "lgfxJapanMincho_16", desc: "明朝体/等幅/16ピクセル" }],
-            ["lgfx_font_japan_mincho_20", { order: 22, name: "lgfxJapanMincho_20", desc: "明朝体/等幅/20ピクセル" }],
-            ["lgfx_font_japan_mincho_24", { order: 23, name: "lgfxJapanMincho_24", desc: "明朝体/等幅/24ピクセル" }],
-            ["lgfx_font_japan_mincho_28", { order: 24, name: "lgfxJapanMincho_28", desc: "明朝体/等幅/28ピクセル" }],
-            ["lgfx_font_japan_mincho_32", { order: 25, name: "lgfxJapanMincho_32", desc: "明朝体/等幅/32ピクセル" }],
-            ["lgfx_font_japan_mincho_36", { order: 26, name: "lgfxJapanMincho_36", desc: "明朝体/等幅/36ピクセル" }],
-            ["lgfx_font_japan_mincho_40", { order: 27, name: "lgfxJapanMincho_40", desc: "明朝体/等幅/40ピクセル" }],
-            ["lgfx_font_japan_mincho_p_8", { order: 28, name: "lgfxJapanMinchoP_8", desc: "明朝体/プロポーショナル/8ピクセル" }],
-            ["lgfx_font_japan_mincho_p_12", { order: 29, name: "lgfxJapanMinchoP_12", desc: "明朝体/プロポーショナル/12ピクセル" }],
-            ["lgfx_font_japan_mincho_p_16", { order: 30, name: "lgfxJapanMinchoP_16", desc: "明朝体/プロポーショナル/16ピクセル" }],
-            ["lgfx_font_japan_mincho_p_20", { order: 31, name: "lgfxJapanMinchoP_20", desc: "明朝体/プロポーショナル/20ピクセル" }],
-            ["lgfx_font_japan_mincho_p_24", { order: 32, name: "lgfxJapanMinchoP_24", desc: "明朝体/プロポーショナル/24ピクセル" }],
-            ["lgfx_font_japan_mincho_p_28", { order: 33, name: "lgfxJapanMinchoP_28", desc: "明朝体/プロポーショナル/28ピクセル" }],
-            ["lgfx_font_japan_mincho_p_32", { order: 34, name: "lgfxJapanMinchoP_32", desc: "明朝体/プロポーショナル/32ピクセル" }],
-            ["lgfx_font_japan_mincho_p_36", { order: 35, name: "lgfxJapanMinchoP_36", desc: "明朝体/プロポーショナル/36ピクセル" }],
-            ["lgfx_font_japan_mincho_p_40", { order: 36, name: "lgfxJapanMinchoP_40", desc: "明朝体/プロポーショナル/40ピクセル" }]
-        ]);
+      const dictFontName_efont = new Map([
+        [
+          "lgfx_efont_cn_10",
+          { order: 1, name: "efontCN_10", desc: "efontCN_10" },
+        ],
+        [
+          "lgfx_efont_cn_10_b",
+          { order: 2, name: "efontCN_10_b", desc: "efontCN_10_b" },
+        ],
+        [
+          "lgfx_efont_cn_10_bi",
+          { order: 3, name: "efontCN_10_bi", desc: "efontCN_10_bi" },
+        ],
+        [
+          "lgfx_efont_cn_10_i",
+          { order: 4, name: "efontCN_10_i", desc: "efontCN_10_i" },
+        ],
+        [
+          "lgfx_efont_cn_12",
+          { order: 5, name: "efontCN_12", desc: "efontCN_12" },
+        ],
+        [
+          "lgfx_efont_cn_12_b",
+          { order: 5, name: "efontCN_12_b", desc: "efontCN_12_b" },
+        ],
+        [
+          "lgfx_efont_cn_12_bi",
+          { order: 6, name: "efontCN_12_bi", desc: "efontCN_12_bi" },
+        ],
+        [
+          "lgfx_efont_cn_12_i",
+          { order: 7, name: "efontCN_12_i", desc: "efontCN_12_i" },
+        ],
+        [
+          "lgfx_efont_cn_14",
+          { order: 9, name: "efontCN_14", desc: "efontCN_14" },
+        ],
+        [
+          "lgfx_efont_cn_14_b",
+          { order: 10, name: "efontCN_14_b", desc: "efontCN_14_b" },
+        ],
+        [
+          "lgfx_efont_cn_14_bi",
+          { order: 11, name: "efontCN_14_bi", desc: "efontCN_14_bi" },
+        ],
+        [
+          "lgfx_efont_cn_14_i",
+          { order: 12, name: "efontCN_14_i", desc: "efontCN_14_i" },
+        ],
+        [
+          "lgfx_efont_cn_16",
+          { order: 13, name: "efontCN_16", desc: "efontCN_16" },
+        ],
+        [
+          "lgfx_efont_cn_16_b",
+          { order: 14, name: "efontCN_16_b", desc: "efontCN_16_b" },
+        ],
+        [
+          "lgfx_efont_cn_16_bi",
+          { order: 15, name: "efontCN_16_bi", desc: "efontCN_16_bi" },
+        ],
+        [
+          "lgfx_efont_cn_16_i",
+          { order: 16, name: "efontCN_16_i", desc: "efontCN_16_i" },
+        ],
+        [
+          "lgfx_efont_cn_24",
+          { order: 17, name: "efontCN_24", desc: "efontCN_24" },
+        ],
+        [
+          "lgfx_efont_cn_24_b",
+          { order: 18, name: "efontCN_24_b", desc: "efontCN_24_b" },
+        ],
+        [
+          "lgfx_efont_cn_24_bi",
+          { order: 19, name: "efontCN_24_bi", desc: "efontCN_24_bi" },
+        ],
+        [
+          "lgfx_efont_cn_24_i",
+          { order: 20, name: "efontCN_24_i", desc: "efontCN_24_i" },
+        ],
+      ]);
 
-        const dictFontName_efont = new Map([
-            ["lgfx_efont_cn_10", { order: 1, name: "efontCN_10", desc: "efontCN_10" }],
-            ["lgfx_efont_cn_10_b", { order: 2, name: "efontCN_10_b", desc: "efontCN_10_b" }],
-            ["lgfx_efont_cn_10_bi", { order: 3, name: "efontCN_10_bi", desc: "efontCN_10_bi" }],
-            ["lgfx_efont_cn_10_i", { order: 4, name: "efontCN_10_i", desc: "efontCN_10_i" }],
-            ["lgfx_efont_cn_12", { order: 5, name: "efontCN_12", desc: "efontCN_12" }],
-            ["lgfx_efont_cn_12_b", { order: 5, name: "efontCN_12_b", desc: "efontCN_12_b" }],
-            ["lgfx_efont_cn_12_bi", { order: 6, name: "efontCN_12_bi", desc: "efontCN_12_bi" }],
-            ["lgfx_efont_cn_12_i", { order: 7, name: "efontCN_12_i", desc: "efontCN_12_i" }],
-            ["lgfx_efont_cn_14", { order: 9, name: "efontCN_14", desc: "efontCN_14" }],
-            ["lgfx_efont_cn_14_b", { order: 10, name: "efontCN_14_b", desc: "efontCN_14_b" }],
-            ["lgfx_efont_cn_14_bi", { order: 11, name: "efontCN_14_bi", desc: "efontCN_14_bi" }],
-            ["lgfx_efont_cn_14_i", { order: 12, name: "efontCN_14_i", desc: "efontCN_14_i" }],
-            ["lgfx_efont_cn_16", { order: 13, name: "efontCN_16", desc: "efontCN_16" }],
-            ["lgfx_efont_cn_16_b", { order: 14, name: "efontCN_16_b", desc: "efontCN_16_b" }],
-            ["lgfx_efont_cn_16_bi", { order: 15, name: "efontCN_16_bi", desc: "efontCN_16_bi" }],
-            ["lgfx_efont_cn_16_i", { order: 16, name: "efontCN_16_i", desc: "efontCN_16_i" }],
-            ["lgfx_efont_cn_24", { order: 17, name: "efontCN_24", desc: "efontCN_24" }],
-            ["lgfx_efont_cn_24_b", { order: 18, name: "efontCN_24_b", desc: "efontCN_24_b" }],
-            ["lgfx_efont_cn_24_bi", { order: 19, name: "efontCN_24_bi", desc: "efontCN_24_bi" }],
-            ["lgfx_efont_cn_24_i", { order: 20, name: "efontCN_24_i", desc: "efontCN_24_i" }]
-        ]);
+      // フォントファイルの一覧
+      const dictFontFile = {
+        IPA: {
+          name: "IPAフォント",
+          URL: font_source_IPA,
+          font_dic: dictFontName_IPA,
+        },
+        efont: {
+          name: "efont",
+          URL: font_source_efont,
+          font_dic: dictFontName_efont,
+        },
+      };
 
-        // フォントファイルの一覧
-        const dictFontFile = {
-            IPA: {
-                name: "IPAフォント",
-                URL: font_source_IPA,
-                font_dic: dictFontName_IPA
-            },
-            efont: {
-                name: "efont",
-                URL: font_source_efont,
-                font_dic: dictFontName_efont
-            }
-        };
+      // 現在選択されているフォント
+      var dictFontName;
 
-        // 現在選択されているフォント
-        var dictFontName;
-
-        // フォントヘッダ
-        class FontFileHeader {
-            constructor(...args) {
-                if (args.length == 0) {
-                    this.data = new Uint8Array(23);
-                } else if (args.length == 1 && args[0] instanceof Uint8Array && args[0].length == 23) {
-                    this.data = args[0];
-                } else {
-                    throw "FontFileHeader: Unexpected";
-                }
-            }
-
-            get glyph_cnt() { return this.data[0]; }
-            get bbx_mode() { return this.data[1]; }
-            get bits_per_0() { return this.data[2]; }
-            get bits_per_1() { return this.data[3]; }
-            get bits_per_char_width() { return this.data[4]; }
-            get bits_per_char_height() { return this.data[5]; }
-            get bits_per_char_x() { return this.data[6]; }
-            get bits_per_char_y() { return this.data[7]; }
-            get bits_per_delta_x() { return this.data[8]; }
-            get max_char_width() { return toInt8(this.data[9]); }
-            get max_char_height() { return toInt8(this.data[10]); }
-            get x_offset() { return toInt8(this.data[11]); }
-            get y_offset() { return toInt8(this.data[12]); }
-            get ascent_A() { return toInt8(this.data[13]); }
-            get descent_g() { return toInt8(this.data[14]); }
-            get ascent_para() { return toInt8(this.data[15]); }
-            get descent_para() { return toInt8(this.data[16]); }
-            get start_pos_upper_A() { return (this.data[17] << 8) | this.data[18]; }
-            set start_pos_upper_A(p) { this.data[17] = p >> 8; this.data[18] = p & 0xff; }
-            get start_pos_lower_a() { return (this.data[19] << 8) | this.data[20]; }
-            set start_pos_lower_a(p) { this.data[19] = p >> 8; this.data[20] = p & 0xff; }
-            get start_pos_unicode() { return (this.data[21] << 8) | this.data[22]; }
-            set start_pos_unicode(p) { this.data[21] = p >> 8; this.data[22] = p & 0xff; }
+      // フォントヘッダ
+      class FontFileHeader {
+        constructor(...args) {
+          if (args.length == 0) {
+            this.data = new Uint8Array(23);
+          } else if (
+            args.length == 1 &&
+            args[0] instanceof Uint8Array &&
+            args[0].length == 23
+          ) {
+            this.data = args[0];
+          } else {
+            throw "FontFileHeader: Unexpected";
+          }
         }
 
-        // フォント
-        class FontFile {
-            constructor(org) {
-                this.data = new Uint8Array(org);
-                this.header = new FontFileHeader(this.data.subarray(0, 23));
+        get glyph_cnt() {
+          return this.data[0];
+        }
+        get bbx_mode() {
+          return this.data[1];
+        }
+        get bits_per_0() {
+          return this.data[2];
+        }
+        get bits_per_1() {
+          return this.data[3];
+        }
+        get bits_per_char_width() {
+          return this.data[4];
+        }
+        get bits_per_char_height() {
+          return this.data[5];
+        }
+        get bits_per_char_x() {
+          return this.data[6];
+        }
+        get bits_per_char_y() {
+          return this.data[7];
+        }
+        get bits_per_delta_x() {
+          return this.data[8];
+        }
+        get max_char_width() {
+          return toInt8(this.data[9]);
+        }
+        get max_char_height() {
+          return toInt8(this.data[10]);
+        }
+        get x_offset() {
+          return toInt8(this.data[11]);
+        }
+        get y_offset() {
+          return toInt8(this.data[12]);
+        }
+        get ascent_A() {
+          return toInt8(this.data[13]);
+        }
+        get descent_g() {
+          return toInt8(this.data[14]);
+        }
+        get ascent_para() {
+          return toInt8(this.data[15]);
+        }
+        get descent_para() {
+          return toInt8(this.data[16]);
+        }
+        get start_pos_upper_A() {
+          return (this.data[17] << 8) | this.data[18];
+        }
+        set start_pos_upper_A(p) {
+          this.data[17] = p >> 8;
+          this.data[18] = p & 0xff;
+        }
+        get start_pos_lower_a() {
+          return (this.data[19] << 8) | this.data[20];
+        }
+        set start_pos_lower_a(p) {
+          this.data[19] = p >> 8;
+          this.data[20] = p & 0xff;
+        }
+        get start_pos_unicode() {
+          return (this.data[21] << 8) | this.data[22];
+        }
+        set start_pos_unicode(p) {
+          this.data[21] = p >> 8;
+          this.data[22] = p & 0xff;
+        }
+      }
+
+      // フォント
+      class FontFile {
+        constructor(org) {
+          this.data = new Uint8Array(org);
+          this.header = new FontFileHeader(this.data.subarray(0, 23));
+        }
+
+        // 文字コードを指定して文字を取得する。Glyphオブジェクトを返す。
+        // ※返すデータは元データのsubarray
+        getGlyph(char) {
+          console.log("getGlyph(" + toHex(char) + ")");
+          var ptr = 23;
+          if (char <= 255) {
+            if (char >= 0x61) {
+              ptr += this.header.start_pos_lower_a;
+            } else if (char >= 0x41) {
+              ptr += this.header.start_pos_upper_A;
             }
-
-            // 文字コードを指定して文字を取得する。Glyphオブジェクトを返す。
-            // ※返すデータは元データのsubarray
-            getGlyph(char) {
-                console.log("getGlyph(" + toHex(char) + ")");
-                var ptr = 23;
-                if (char <= 255) {
-                    if (char >= 0x61) {
-                        ptr += this.header.start_pos_lower_a;
-                    } else if (char >= 0x41) {
-                        ptr += this.header.start_pos_upper_A;
-                    }
-                    while (this.data[ptr + 1] != 0) {
-                        if (this.data[ptr] == char) {
-                            console.log("begin:" + toHex(ptr));
-                            return new Glyph(this.data.subarray(ptr, ptr + this.data[ptr + 1]), false);
-                        }
-                        ptr += this.data[ptr + 1];
-                    }
-                } else {
-                    ptr += this.header.start_pos_unicode;
-                    var table = ptr;
-                    var e;
-                    do {
-                        ptr += (this.data[table] << 8) | this.data[table + 1];
-                        e = (this.data[table + 2] << 8) | this.data[table + 3];
-                        if (e < 0xffff) {
-                            var ptr2 = ptr;
-                            var code;
-                            while ((code = this.data[ptr2] << 8 | this.data[ptr2 + 1]) != 0) {
-                                if (code == char) {
-                                    console.log("begin:" + toHex(ptr2));
-                                    return new Glyph(this.data.subarray(ptr2, ptr2 + this.data[ptr2 + 2]), true);
-                                }
-                                ptr2 += this.data[ptr2 + 2];
-                            }
-                        }
-                        table += 4;
-                    } while (e != 65535);
-                }
-                return null;
+            while (this.data[ptr + 1] != 0) {
+              if (this.data[ptr] == char) {
+                console.log("begin:" + toHex(ptr));
+                return new Glyph(
+                  this.data.subarray(ptr, ptr + this.data[ptr + 1]),
+                  false
+                );
+              }
+              ptr += this.data[ptr + 1];
             }
-
-            _getASCIICharArray(ptr) {
-                var list = new Array();
-                while (this.data[ptr + 1] != 0) {
-                    list.push(this.data[ptr]);
-                    ptr += this.data[ptr + 1];
-                }
-                return list;
-            }
-
-            _getUnicodeCharArray() {
-                var ptr = 23 + this.header.start_pos_unicode;
-                var table = ptr;
-                var list = new Array();
-                var e;
-
-                ptr += (this.data[table] << 8) | this.data[table + 1];
-                e = (this.data[table + 2] << 8) | this.data[table + 3];
+          } else {
+            ptr += this.header.start_pos_unicode;
+            var table = ptr;
+            var e;
+            do {
+              ptr += (this.data[table] << 8) | this.data[table + 1];
+              e = (this.data[table + 2] << 8) | this.data[table + 3];
+              if (e < 0xffff) {
                 var ptr2 = ptr;
                 var code;
-                while ((code = this.data[ptr2] << 8 | this.data[ptr2 + 1]) != 0) {
-                    list.push(code);
-                    ptr2 += this.data[ptr2 + 2];
+                while (
+                  (code = (this.data[ptr2] << 8) | this.data[ptr2 + 1]) != 0
+                ) {
+                  if (code == char) {
+                    console.log("begin:" + toHex(ptr2));
+                    return new Glyph(
+                      this.data.subarray(ptr2, ptr2 + this.data[ptr2 + 2]),
+                      true
+                    );
+                  }
+                  ptr2 += this.data[ptr2 + 2];
                 }
-
-                return unique(list);
-            }
-
-            // 収録されている文字コードのリストを取得する
-            getCharList() {
-                var list = this._getASCIICharArray(23);
-                concatUnique(list, this._getASCIICharArray(23 + this.header.start_pos_lower_a));
-                concatUnique(list, this._getASCIICharArray(23 + this.header.start_pos_upper_A));
-                concatUnique(list, this._getUnicodeCharArray());
-                return list.sort((a, b) => a - b);
-            }
+              }
+              table += 4;
+            } while (e != 65535);
+          }
+          return null;
         }
 
-        // フォントファイル生成器
-        class FontFileGenerator {
-            constructor(template) {
-                this.header = new FontFileHeader(Uint8Array.from(template.header.data));
-                this.new_glyphs = new Array();
-                this.data = null;
-            }
-
-            // 文字を追加する
-            addGlyph(glyph) {
-                if (glyph instanceof Glyph) {
-                    this.new_glyphs.push(glyph);
-
-                } else {
-                    throw "addGlyph: Unimplemented";
-                }
-            }
-
-            get name() { return this._name };
-            set name(font_name) { this._name = font_name };
-
-            // シリアライズ
-            serialize() {
-                var list = this.new_glyphs.sort((a, b) => a.code - b.code);
-                var list_ascii = list.filter(a => a.code <= 0xff);
-                var list_unicode = list.filter(a => a.code > 0xff);
-
-                var end_of_ascii = [0x00];
-                var unicode_lookup_table = [0x00, 0x04, 0xff, 0xff];
-                var end_of_unicode = [0x00, 0x00];
-
-                this.header.start_pos_upper_A = 0;
-                this.header.start_pos_lower_a = 0;
-                this.header.start_pos_unicode = FontFileGenerator.getGlyphArraySize(list_ascii) + end_of_ascii.length;
-
-                var total_size = this.header.data.length;
-                total_size += FontFileGenerator.getGlyphArraySize(list_ascii);
-                total_size += end_of_ascii.length;
-                total_size += unicode_lookup_table.length;
-                total_size += FontFileGenerator.getGlyphArraySize(list_unicode);
-                total_size += end_of_unicode.length;
-
-                var newdata = new Uint8Array(total_size);
-
-                newdata.set(this.header.data, 0);
-                var ptr = this.header.data.length;
-
-                ptr = FontFileGenerator._serializeGlyphArray(list_ascii, newdata, ptr);
-
-                newdata.set(end_of_ascii, ptr);
-                ptr += end_of_ascii.length;
-
-                newdata.set(unicode_lookup_table, ptr);
-                ptr += unicode_lookup_table.length;
-
-                ptr = FontFileGenerator._serializeGlyphArray(list_unicode, newdata, ptr);
-
-                newdata.set(end_of_unicode, ptr);
-
-                this.data = newdata;
-            }
-
-            static _serializeGlyphArray(list, arr, ptr) {
-                list.forEach(glyph => {
-                    arr.set(glyph.data, ptr);
-                    ptr += glyph.data.length;
-                });
-                return ptr;
-            }
-
-            // Glyphオブジェクトの配列の全データサイズを取得する
-            static getGlyphArraySize(list) {
-                var size = 0;
-                list.forEach(glyph => {
-                    size += glyph.data.length;
-                });
-                return size;
-            }
+        _getASCIICharArray(ptr) {
+          var list = new Array();
+          while (this.data[ptr + 1] != 0) {
+            list.push(this.data[ptr]);
+            ptr += this.data[ptr + 1];
+          }
+          return list;
         }
 
-        // 文字
-        class Glyph {
-            constructor(raw_data, is_unicode) {
-                this.data = raw_data;
-                this.unicode = is_unicode;
-                if (this.isUnicode) {
-                    this.code = (this.data[0] << 8) | this.data[1];
-                    this.raw_length = this.data[2];
-                } else {
-                    this.code = this.data[0];
-                    this.raw_length = this.data[1];
-                }
-            }
+        _getUnicodeCharArray() {
+          var ptr = 23 + this.header.start_pos_unicode;
+          var table = ptr;
+          var list = new Array();
+          var e;
 
-            get isUnicode() { return this.unicode }
+          ptr += (this.data[table] << 8) | this.data[table + 1];
+          e = (this.data[table + 2] << 8) | this.data[table + 3];
+          var ptr2 = ptr;
+          var code;
+          while ((code = (this.data[ptr2] << 8) | this.data[ptr2 + 1]) != 0) {
+            list.push(code);
+            ptr2 += this.data[ptr2 + 2];
+          }
+
+          return unique(list);
         }
 
-        // uint8からint8へ変換
-        function toInt8(a) {
-            if (a <= 127) {
-                return a;
+        // 収録されている文字コードのリストを取得する
+        getCharList() {
+          var list = this._getASCIICharArray(23);
+          concatUnique(
+            list,
+            this._getASCIICharArray(23 + this.header.start_pos_lower_a)
+          );
+          concatUnique(
+            list,
+            this._getASCIICharArray(23 + this.header.start_pos_upper_A)
+          );
+          concatUnique(list, this._getUnicodeCharArray());
+          return list.sort((a, b) => a - b);
+        }
+      }
+
+      // フォントファイル生成器
+      class FontFileGenerator {
+        constructor(template) {
+          this.header = new FontFileHeader(
+            Uint8Array.from(template.header.data)
+          );
+          this.new_glyphs = new Array();
+          this.data = null;
+        }
+
+        // 文字を追加する
+        addGlyph(glyph) {
+          if (glyph instanceof Glyph) {
+            this.new_glyphs.push(glyph);
+          } else {
+            throw "addGlyph: Unimplemented";
+          }
+        }
+
+        get name() {
+          return this._name;
+        }
+        set name(font_name) {
+          this._name = font_name;
+        }
+
+        // シリアライズ
+        serialize() {
+          var list = this.new_glyphs.sort((a, b) => a.code - b.code);
+          var list_ascii = list.filter((a) => a.code <= 0xff);
+          var list_unicode = list.filter((a) => a.code > 0xff);
+
+          var end_of_ascii = [0x00];
+          var unicode_lookup_table = [0x00, 0x04, 0xff, 0xff];
+          var end_of_unicode = [0x00, 0x00];
+
+          this.header.start_pos_upper_A = 0;
+          this.header.start_pos_lower_a = 0;
+          this.header.start_pos_unicode =
+            FontFileGenerator.getGlyphArraySize(list_ascii) +
+            end_of_ascii.length;
+
+          var total_size = this.header.data.length;
+          total_size += FontFileGenerator.getGlyphArraySize(list_ascii);
+          total_size += end_of_ascii.length;
+          total_size += unicode_lookup_table.length;
+          total_size += FontFileGenerator.getGlyphArraySize(list_unicode);
+          total_size += end_of_unicode.length;
+
+          var newdata = new Uint8Array(total_size);
+
+          newdata.set(this.header.data, 0);
+          var ptr = this.header.data.length;
+
+          ptr = FontFileGenerator._serializeGlyphArray(
+            list_ascii,
+            newdata,
+            ptr
+          );
+
+          newdata.set(end_of_ascii, ptr);
+          ptr += end_of_ascii.length;
+
+          newdata.set(unicode_lookup_table, ptr);
+          ptr += unicode_lookup_table.length;
+
+          ptr = FontFileGenerator._serializeGlyphArray(
+            list_unicode,
+            newdata,
+            ptr
+          );
+
+          newdata.set(end_of_unicode, ptr);
+
+          this.data = newdata;
+        }
+
+        static _serializeGlyphArray(list, arr, ptr) {
+          list.forEach((glyph) => {
+            arr.set(glyph.data, ptr);
+            ptr += glyph.data.length;
+          });
+          return ptr;
+        }
+
+        // Glyphオブジェクトの配列の全データサイズを取得する
+        static getGlyphArraySize(list) {
+          var size = 0;
+          list.forEach((glyph) => {
+            size += glyph.data.length;
+          });
+          return size;
+        }
+      }
+
+      // 文字
+      class Glyph {
+        constructor(raw_data, is_unicode) {
+          this.data = raw_data;
+          this.unicode = is_unicode;
+          if (this.isUnicode) {
+            this.code = (this.data[0] << 8) | this.data[1];
+            this.raw_length = this.data[2];
+          } else {
+            this.code = this.data[0];
+            this.raw_length = this.data[1];
+          }
+        }
+
+        get isUnicode() {
+          return this.unicode;
+        }
+      }
+
+      // uint8からint8へ変換
+      function toInt8(a) {
+        if (a <= 127) {
+          return a;
+        } else {
+          return a - 256;
+        }
+      }
+
+      // 16進文字列へ変換
+      function toHex(v, digits = 0) {
+        if (digits == 2 || (digits == 0 && v <= 0xff)) {
+          return ("00" + v.toString(16).toUpperCase()).substr(-2);
+        } else if (digits == 4 || (digits == 0 && v <= 0xffff)) {
+          return ("0000" + v.toString(16).toUpperCase()).substr(-4);
+        } else {
+          return ("00000000" + v.toString(16).toUpperCase()).substr(-8);
+        }
+      }
+
+      // array1にarray2を連結。ただし既存の要素は含まない。
+      function concatUnique(array1, array2) {
+        array2.forEach((item) => {
+          if (array1.indexOf(item) == -1) {
+            array1.push(item);
+          }
+        });
+      }
+
+      // arrayから重複した要素を削除
+      function unique(array) {
+        return array.filter(
+          (elem, index, self) => self.indexOf(elem) === index
+        );
+      }
+
+      // ログウィンドウをクリア
+      function clearLog() {
+        $("#txtResult").val("");
+      }
+
+      // ログウィンドウにメッセージを出力
+      function appendLog(msg, newline = true) {
+        var ta = $("#txtResult");
+        var txt = ta.val();
+        if (txt == "") {
+          txt = msg;
+        } else if (newline) {
+          txt = txt.concat("\n", msg);
+        } else {
+          txt = txt.concat(msg);
+        }
+        ta.val(txt);
+        ta.scrollTop(ta[0].scrollHeight);
+      }
+
+      // ログウィンドウに16進ダンプを出力
+      function outputHexDump(data) {
+        for (var i = 0; i < data.length; i += 16) {
+          console.log(
+            Array.from(data.slice(i, i + 16))
+              .map((a) => toHex(a, 2))
+              .join(" ")
+          );
+        }
+      }
+
+      function generateCodeTableRow(row_code, cols) {
+        if (cols.some((a) => a != -1)) {
+          var row = $("<tr></tr>");
+          row.append($("<td>" + toHex(row_code, 4) + "</td>"));
+          cols.forEach((c) => {
+            var cell = $("<td class='char'></td>");
+            if (c != -1) {
+              cell.text(c);
             } else {
-                return a - 256;
+              cell.css("background-color", "gray");
             }
+            row.append(cell);
+          });
+          return row;
+        } else {
+          return null;
         }
+      }
 
-        // 16進文字列へ変換
-        function toHex(v, digits = 0) {
-            if (digits == 2 || (digits == 0 && v <= 0xff)) {
-                return ('00' + v.toString(16).toUpperCase()).substr(-2);
-            } else if (digits == 4 || (digits == 0 && v <= 0xffff)) {
-                return ('0000' + v.toString(16).toUpperCase()).substr(-4);
-            } else {
-                return ('00000000' + v.toString(16).toUpperCase()).substr(-8);
-            }
-        }
-
-        // array1にarray2を連結。ただし既存の要素は含まない。
-        function concatUnique(array1, array2) {
-            array2.forEach(item => {
-                if (array1.indexOf(item) == -1) {
-                    array1.push(item);
-                }
-            });
-        }
-
-        // arrayから重複した要素を削除
-        function unique(array) {
-            return array.filter((elem, index, self) => self.indexOf(elem) === index);
-        }
-
-        // ログウィンドウをクリア
-        function clearLog() {
-            $("#txtResult").val("");
-        }
-
-        // ログウィンドウにメッセージを出力
-        function appendLog(msg, newline = true) {
-            var ta = $("#txtResult");
-            var txt = ta.val();
-            if (txt == "") {
-                txt = msg;
-            } else if (newline) {
-                txt = txt.concat("\n", msg);
-            } else {
-                txt = txt.concat(msg);
-            }
-            ta.val(txt);
-            ta.scrollTop(ta[0].scrollHeight);
-        }
-
-        // ログウィンドウに16進ダンプを出力
-        function outputHexDump(data) {
-            for (var i = 0; i < data.length; i += 16) {
-                console.log(Array.from(data.slice(i, i + 16)).map((a) => toHex(a, 2)).join(" "));
-            }
-        }
-
-        function generateCodeTableRow(row_code, cols) {
-            if (cols.some((a) => a != -1)) {
-                var row = $("<tr></tr>");
-                row.append($("<td>" + toHex(row_code, 4) + "</td>"));
-                cols.forEach(c => {
-                    var cell = $("<td class='char'></td>");
-                    if (c != -1) {
-                        cell.text(c);
-                    } else {
-                        cell.css("background-color", "gray");
-                    }
-                    row.append(cell);
-                });
-                return row;
-            } else {
-                return null;
-            }
-        }
-
-        // 文字セットの表を作成。table要素を返す。
-        function generateCodeTable(list) {
-            var table = $("<table class='CodeTable'>");
-            var row = $("<tr></tr>");
-            var row_code = 0;
-            var cols = new Array(16);
-            cols.fill(-1);
-            list.forEach(code => {
-                if (row_code != (code & 0xfff0)) {
-                    var row = generateCodeTableRow(row_code, cols);
-                    if (row != null) {
-                        table.append(row);
-                    }
-                    cols.fill(-1);
-                    row_code = code & 0xfff0;
-                }
-                cols[code & 0x000f] = String.fromCodePoint(code);
-            });
+      // 文字セットの表を作成。table要素を返す。
+      function generateCodeTable(list) {
+        var table = $("<table class='CodeTable'>");
+        var row = $("<tr></tr>");
+        var row_code = 0;
+        var cols = new Array(16);
+        cols.fill(-1);
+        list.forEach((code) => {
+          if (row_code != (code & 0xfff0)) {
             var row = generateCodeTableRow(row_code, cols);
             if (row != null) {
-                table.append(row);
+              table.append(row);
             }
-            return table;
+            cols.fill(-1);
+            row_code = code & 0xfff0;
+          }
+          cols[code & 0x000f] = String.fromCodePoint(code);
+        });
+        var row = generateCodeTableRow(row_code, cols);
+        if (row != null) {
+          table.append(row);
         }
+        return table;
+      }
 
-        // サブセットに含めたい文字の文字コードを取得。重複を除く。arrayを返す。
-        function getSubsetCharList() {
-            var subset_text = $("#txtSubset").val();
-            var list = subset_text.split("").filter(a => a >= " ").map(a => a.codePointAt(0));
-            return unique(list);
-        }
+      // サブセットに含めたい文字の文字コードを取得。重複を除く。arrayを返す。
+      function getSubsetCharList() {
+        var subset_text = $("#txtSubset").val();
+        var list = subset_text
+          .split("")
+          .filter((a) => a >= " ")
+          .map((a) => a.codePointAt(0));
+        return unique(list);
+      }
 
-        // グローバル変数subset_generator上にサブセットを作成する
-        function generateSubset(font, subset_list) {
-            subset_generator = new FontFileGenerator(font);
-            subset_list.forEach(code => {
-                var glyph = font.getGlyph(code);
-                subset_generator.addGlyph(glyph);
-            });
-            subset_generator.serialize();
-            //outputHexDump(subset_generator.data);
-        }
+      // グローバル変数subset_generator上にサブセットを作成する
+      function generateSubset(font, subset_list) {
+        subset_generator = new FontFileGenerator(font);
+        subset_list.forEach((code) => {
+          var glyph = font.getGlyph(code);
+          subset_generator.addGlyph(glyph);
+        });
+        subset_generator.serialize();
+        //outputHexDump(subset_generator.data);
+      }
 
-        // C言語の文字列プリミティブをデコードする
-        function decodeCString(str, buff, ptr) {
-            var octbuff = "";
-            var parsingOctal = false;
-            for (var i = 0; i < str.length; i++) {
-                var c = str.charAt(i);
-                if (c == "\\") {
-                    if (octbuff != "") {
-                        buff[ptr] = Number.parseInt(octbuff, 8);
-                        ptr++;
-                    }
-                    octbuff = "";
-                    parsingOctal = true;
-                } else {
-                    if (parsingOctal) {
-                        if (octbuff.length < 3 && "0" <= c && c <= "7") {
-                            if (octbuff.length < 2 || (octbuff.length == 2 && octbuff[0] <= "3")) {
-                                octbuff = octbuff.concat(c);
-                            } else {
-                                parsingOctal = false;
-                            }
-                        } else {
-                            parsingOctal = false;
-                        }
-                    }
-                    if (!parsingOctal) {
-                        if (octbuff != "") {
-                            buff[ptr] = Number.parseInt(octbuff, 8);
-                            octbuff = "";
-                            ptr++;
-                        }
-                        buff[ptr] = c.charCodeAt(0);
-                        ptr++;
-                    }
-                }
-            }
+      // C言語の文字列プリミティブをデコードする
+      function decodeCString(str, buff, ptr) {
+        var octbuff = "";
+        var parsingOctal = false;
+        for (var i = 0; i < str.length; i++) {
+          var c = str.charAt(i);
+          if (c == "\\") {
             if (octbuff != "") {
-                buff[ptr] = Number.parseInt(octbuff, 8);
-                ptr++;
+              buff[ptr] = Number.parseInt(octbuff, 8);
+              ptr++;
             }
-            return ptr;
-        }
-
-        // グローバル変数font_master上にフォントを読み込む
-        function retrieveFonts(data) {
-            var lines = data.split("\n");
-            var reDeclaration = /^const\s+uint8_t\s+([A-Za-z0-9_]+)\s*\[\s*(\d+)\s*\]/;
-            var reMiddlePart = /^"([^"]*)"$/;
-            reMiddlePart.end_part = false;
-            var reEndPart = /^"([^"]*)"\s*;$/;
-            reEndPart.end_part = true;
-            var font_name;
-            var font_data = null;
-            var size;
-            var ptr;
-            var error = false;
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i].trim();
-                var match = reDeclaration.exec(line);
-                if (match != null) {
-                    font_name = match[1];
-                    size = Number.parseInt(match[2]);
-                    font_data = new Uint8Array(size);
-                    font_master.set(font_name, font_data);
-                    ptr = 0;
+            octbuff = "";
+            parsingOctal = true;
+          } else {
+            if (parsingOctal) {
+              if (octbuff.length < 3 && "0" <= c && c <= "7") {
+                if (
+                  octbuff.length < 2 ||
+                  (octbuff.length == 2 && octbuff[0] <= "3")
+                ) {
+                  octbuff = octbuff.concat(c);
                 } else {
-                    var isEndPart = false;
-                    match = reMiddlePart.exec(line);
-                    if (match == null) {
-                        isEndPart = true;
-                        match = reEndPart.exec(line);
-                    }
-                    if (match != null) {
-                        ptr = decodeCString(match[1], font_data, ptr);
-                        if (isEndPart) {
-                            font_data[ptr] = 0;
-                            ptr++;
-                            if (size != ptr) {
-                                appendLog("解析エラー " + font_name + " " + ptr + "/" + size);
-                                error = true;
-                            }
-                            font_data = null;
-                        }
-                    }
+                  parsingOctal = false;
                 }
+              } else {
+                parsingOctal = false;
+              }
             }
-            if (error) {
-                throw "Error at retrieveFonts()";
+            if (!parsingOctal) {
+              if (octbuff != "") {
+                buff[ptr] = Number.parseInt(octbuff, 8);
+                octbuff = "";
+                ptr++;
+              }
+              buff[ptr] = c.charCodeAt(0);
+              ptr++;
             }
+          }
         }
+        if (octbuff != "") {
+          buff[ptr] = Number.parseInt(octbuff, 8);
+          ptr++;
+        }
+        return ptr;
+      }
 
-        // Uint8ArrayをＣ言語のコードに変換する
-        function convertToCCode(generator) {
-            var data = generator.data;
-            var font_name = generator.name;
-            var font_data_name = generator.name + "_data";
-            var lines = new Array();
-            lines.push("// このファイルは「日本語フォントサブセットジェネレーター for LovyanGFX」によって生成されました。");
-            lines.push("// https://github.com/yamamaya/lgfxFontSubsetGenerator");
-            lines.push("// フォントデータは、文字情報技術促進協議会によるIPAフォントから派生した、LovyanGFX内の日本語フォントに基づいています。");
-            lines.push("// LovyanGFX");
-            lines.push("// https://github.com/lovyan03/LovyanGFX");
-            lines.push("// IPAフォントのライセンスについては以下を参照してください。");
-            lines.push("// https://moji.or.jp/ipafont/license/");
-            lines.push("// このソースをスケッチに追加した後、フォントを利用するソースには、以下の定義を追加してください。");
-            lines.push("// extern const lgfx::U8g2font " + font_name + ";");
-            lines.push("// フォントを使用するときは、以下のようにsetFont関数で指定してください。");
-            lines.push("// lcd.setFont(&" + font_name + ");");
-            lines.push("");
-            lines.push("#include <LovyanGFX.hpp>");
-            lines.push("");
-            lines.push("const uint8_t " + font_name + "_data[" + data.length + "] = {");
-            for (var i = 0; i < data.length; i += 16) {
-                var line = Array.from(data.subarray(i, i + 16)).map((a) => "0x" + toHex(a, 2)).join(", ");
-                if (i + 16 < data.length) {
-                    line += ",";
+      // グローバル変数font_master上にフォントを読み込む
+      function retrieveFonts(data) {
+        var lines = data.split("\n");
+        var reDeclaration =
+          /^const\s+uint8_t\s+([A-Za-z0-9_]+)\s*\[\s*(\d+)\s*\]/;
+        var reMiddlePart = /^"([^"]*)"$/;
+        reMiddlePart.end_part = false;
+        var reEndPart = /^"([^"]*)"\s*;$/;
+        reEndPart.end_part = true;
+        var font_name;
+        var font_data = null;
+        var size;
+        var ptr;
+        var error = false;
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          var match = reDeclaration.exec(line);
+          if (match != null) {
+            font_name = match[1];
+            size = Number.parseInt(match[2]);
+            font_data = new Uint8Array(size);
+            font_master.set(font_name, font_data);
+            ptr = 0;
+          } else {
+            var isEndPart = false;
+            match = reMiddlePart.exec(line);
+            if (match == null) {
+              isEndPart = true;
+              match = reEndPart.exec(line);
+            }
+            if (match != null) {
+              ptr = decodeCString(match[1], font_data, ptr);
+              if (isEndPart) {
+                font_data[ptr] = 0;
+                ptr++;
+                if (size != ptr) {
+                  appendLog("解析エラー " + font_name + " " + ptr + "/" + size);
+                  error = true;
                 }
-                lines.push("    " + line);
+                font_data = null;
+              }
             }
-            lines.push("};");
-            lines.push("extern const lgfx::U8g2font " + font_name + " = { " + font_data_name + " };");
+          }
+        }
+        if (error) {
+          throw "Error at retrieveFonts()";
+        }
+      }
 
-            lines.push("");
-            lines.push("// 収録されている文字の一覧");
-            var charlist = generator.new_glyphs.map((a) => a.code).sort((a, b) => a - b);
-            for (var i = 0; i < charlist.length; i += 8) {
-                var line = charlist.slice(i, i + 8).map((a) => "U+" + toHex(a, 4) + " \"" + String.fromCharCode(a) + "\"").join(", ");
-                lines.push("// " + line);
-            }
+      // Uint8ArrayをＣ言語のコードに変換する
+      function convertToCCode(generator) {
+        var data = generator.data;
+        var font_name = generator.name;
+        var font_data_name = generator.name + "_data";
+        var lines = new Array();
+        lines.push(
+          "// このファイルは「日本語フォントサブセットジェネレーター for LovyanGFX」によって生成されました。"
+        );
+        lines.push("// https://github.com/yamamaya/lgfxFontSubsetGenerator");
+        lines.push(
+          "// フォントデータは、文字情報技術促進協議会によるIPAフォントから派生した、LovyanGFX内の日本語フォントに基づいています。"
+        );
+        lines.push("// LovyanGFX");
+        lines.push("// https://github.com/lovyan03/LovyanGFX");
+        lines.push(
+          "// IPAフォントのライセンスについては以下を参照してください。"
+        );
+        lines.push("// https://moji.or.jp/ipafont/license/");
+        lines.push(
+          "// このソースをスケッチに追加した後、フォントを利用するソースには、以下の定義を追加してください。"
+        );
+        lines.push("// extern const lgfx::U8g2font " + font_name + ";");
+        lines.push(
+          "// フォントを使用するときは、以下のようにsetFont関数で指定してください。"
+        );
+        lines.push("// lcd.setFont(&" + font_name + ");");
+        lines.push("");
+        // lines.push("#include <LovyanGFX.hpp>");
+        lines.push('#include "fonts.h"');
+        lines.push("");
+        lines.push(
+          "const uint8_t " + font_name + "_data[" + data.length + "] = {"
+        );
+        for (var i = 0; i < data.length; i += 16) {
+          var line = Array.from(data.subarray(i, i + 16))
+            .map((a) => "0x" + toHex(a, 2))
+            .join(", ");
+          if (i + 16 < data.length) {
+            line += ",";
+          }
+          lines.push("    " + line);
+        }
+        lines.push("};");
+        // lines.push(
+        //   "extern const lgfx::U8g2font " +
+        //     font_name +
+        //     " = { " +
+        //     font_data_name +
+        //     " };"
+        // );
+        lines.push(
+          "const size_t " + font_name + "_size = sizeof(" + font_name + ");"
+        );
 
-            var text = lines.join("\n") + "\n";
-            console.log(text);
-            return text;
+        lines.push("");
+        lines.push("// 収録されている文字の一覧");
+        var charlist = generator.new_glyphs
+          .map((a) => a.code)
+          .sort((a, b) => a - b);
+        for (var i = 0; i < charlist.length; i += 8) {
+          var line = charlist
+            .slice(i, i + 8)
+            .map(
+              (a) => "U+" + toHex(a, 4) + ' "' + String.fromCharCode(a) + '"'
+            )
+            .join(", ");
+          lines.push("// " + line);
         }
 
-        // モーダルウィンドウを表示する
-        function showModalWindow(id) {
-            if (id.indexOf("#") != 0) {
-                id = "#" + id;
-            }
-            $(id).fadeIn(300);
+        var text = lines.join("\n") + "\n";
+        console.log(text);
+        return text;
+      }
+
+      // モーダルウィンドウを表示する
+      function showModalWindow(id) {
+        if (id.indexOf("#") != 0) {
+          id = "#" + id;
         }
+        $(id).fadeIn(300);
+      }
 
-        // モーダルウィンドウを消す
-        function hideModalWindow(id) {
-            if (id.indexOf("#") != 0) {
-                id = "#" + id;
-            }
-            $(id).fadeOut(300);
+      // モーダルウィンドウを消す
+      function hideModalWindow(id) {
+        if (id.indexOf("#") != 0) {
+          id = "#" + id;
         }
+        $(id).fadeOut(300);
+      }
 
-        // READY
-        $(function () {
-            $("#txtFontFile").val("");
-            $("#fileUpload").val("");
-            $("#selFont").prop("disabled", true);
-            $("#btnShowCharset").prop("disabled", true);
-            $("#btnGenerate").prop("disabled", true);
-            disableDownload();
-            clearLog();
-        });
+      // READY
+      $(function () {
+        $("#txtFontFile").val("");
+        $("#fileUpload").val("");
+        $("#selFont").prop("disabled", true);
+        $("#btnShowCharset").prop("disabled", true);
+        $("#btnGenerate").prop("disabled", true);
+        disableDownload();
+        clearLog();
+      });
 
-        // 進捗表示を設定する
-        function setProgress(value) {
-            $("#divProgressBar").css("width", value + "%");
-            $("#divProgressValue").text(value + "%");
-        }
+      // 進捗表示を設定する
+      function setProgress(value) {
+        $("#divProgressBar").css("width", value + "%");
+        $("#divProgressValue").text(value + "%");
+      }
 
-        // フォントファイルをダウンロードする
-        function downloadFontFile(url) {
-            $("#selFont").children().remove();
-            setProgress(0);
-            appendLog("フォントファイルを読み込んでいます... ");
-            showModalWindow("divModalProgress");
-            $.ajax({
-                url: url,
-                dataType: "text",
-                xhr: function () {
-                    var xhr = new window.XMLHttpRequest();
-                    xhr.addEventListener("progress", function (evt) {
-                        if (evt.lengthComputable) {
-                            var percentComplete = Math.round(100 * evt.loaded / evt.total);
-                            setProgress(percentComplete);
-                        }
-                    }, false);
-                    return xhr;
+      // フォントファイルをダウンロードする
+      function downloadFontFile(url) {
+        $("#selFont").children().remove();
+        setProgress(0);
+        appendLog("フォントファイルを読み込んでいます... ");
+        showModalWindow("divModalProgress");
+        $.ajax({
+          url: url,
+          dataType: "text",
+          xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+            xhr.addEventListener(
+              "progress",
+              function (evt) {
+                if (evt.lengthComputable) {
+                  var percentComplete = Math.round(
+                    (100 * evt.loaded) / evt.total
+                  );
+                  setProgress(percentComplete);
                 }
-            }).then(function (data) {
-                return new Promise((resolve, reject) => {
-                    hideModalWindow("divModalProgress");
-                    appendLog("成功", false);
-                    appendLog(data.length + "バイトのフォントファイルを読み込みました。");
-                    appendLog("フォントファイルを解析しています... ");
-                    setTimeout(() => resolve(data), 500);
-                });
-
-            }, function () {
-                appendLog("失敗", false);
-                throw "Error at ajax";
-
-            }).then(function (data) {
-                retrieveFonts(data);
-                appendLog("成功", false);
-                appendLog(font_master.size + "個のフォントを読み込みました。");
-
-                dictFontName.forEach((font_config, font_name) => {
-                    if (font_master.has(font_name)) {
-                        $("#selFont").append($('<option>').html(font_config.desc).val(font_name));
-                    } else {
-                        appendLog("\"" + font_config.name + "\"が見つかりません。");
-                    }
-                });
-
-                $("#selFont").prop("disabled", false);
-                $("#btnShowCharset").prop("disabled", false);
-                $("#btnGenerate").prop("disabled", false);
-
-            }).catch(() => {
+              },
+              false
+            );
+            return xhr;
+          },
+        })
+          .then(
+            function (data) {
+              return new Promise((resolve, reject) => {
                 hideModalWindow("divModalProgress");
-                appendLog("フォントファイルを読み込めませんでした。");
-            });
-        }
-
-        // 「フォントファイルを選ぶ」
-        $("#btnSelectFontFile").on("click", function () {
-            showModalWindow("divModalFontFile");
-        });
-        $("#txtFontFile").on("click", function () {
-            showModalWindow("divModalFontFile");
-        });
-
-        // 「閉じる」（フォントファイル）
-        $("#btnCloseFontFile").on("click", function () {
-            hideModalWindow("divModalFontFile");
-        });
-
-        // 「IPAフォント」（フォントファイル）
-        $("#btnSelect_IPAFont").on("click", function () {
-            hideModalWindow("divModalFontFile");
-            $("#txtFontFile").val(dictFontFile.IPA.name);
-            dictFontName = dictFontFile.IPA.font_dic;
-            downloadFontFile(dictFontFile.IPA.URL);
-        });
-
-        // 「efont」（フォントファイル）
-        $("#btnSelect_efont").on("click", function () {
-            hideModalWindow("divModalFontFile");
-            $("#txtFontFile").val(dictFontFile.efont.name);
-            dictFontName = dictFontFile.efont.font_dic;
-            downloadFontFile(dictFontFile.efont.URL);
-        });
-
-        // 「文字セットを見る」
-        $("#btnShowCharset").on("click", function () {
-            var font_name;
-            var charlist;
-            (new Promise((resolve, reject) => {
-                font_name = $("#selFont").val();
-                appendLog("フォント\"" + dictFontName.get(font_name).name + "\"を解析します... ");
-                setTimeout(() => resolve(), 100);
-
-            })).then(function () {
-                return new Promise((resolve, reject) => {
-                    var font = new FontFile(font_master.get(font_name));
-                    charlist = font.getCharList();
-                    appendLog("成功", false);
-                    appendLog(charlist.length + "文字を読み込みました。");
-                    setTimeout(() => resolve(), 100);
-                });
-
-            }).then(function () {
-                var content = generateCodeTable(charlist);
-                $("#divFontName").text(dictFontName.get(font_name).name);
-                $("#divCharsetInnerFrame").children().remove();
-                $("#divCharsetInnerFrame").append(content);
-                showModalWindow("divModalCharset");
-            });
-        });
-
-        // 「閉じる」（文字セット）
-        $("#btnCloseCharset").on("click", function () {
-            hideModalWindow("divModalCharset");
-        });
-
-        var download_file = null;       // ダウンロード用ファイル(Blob)
-        var download_url = null;        // ダウンロードURL(createObjectURLにより生成)
-
-        // ダウンロードURL(download_url)を開放
-        function freeDownloadFileObject() {
-            if (download_url != null) {
-                URL.revokeObjectURL(download_url);
-                download_url = null;
-            }
-
-        }
-
-        // UIをダウンロード可/不可に変更
-        function enableDownload(flag = true) {
-            $("#btnDownload").prop("disabled", !flag);
-        }
-        function disableDownload(flag = true) {
-            $("#btnDownload").prop("disabled", flag);
-        }
-
-        // 「生成」
-        $("#btnGenerate").on("click", function () {
-            freeDownloadFileObject();
-            disableDownload();
-            var font_name;
-            var font;
-            var orglist;
-            (new Promise((resolve, reject) => {
-                clearLog();
-                subset_generator = null;
-                if (!isFontNameValid()) {
-                    appendLog("フォントの名前を正しく入力してください。");
-                    throw "error";
-                }
-                font_name = $("#selFont").val();
-                appendLog("元フォント\"" + dictFontName.get(font_name).name + "\"からサブセットを作成します。");
-                appendLog("元フォントを解析します... ");
-                setTimeout(() => resolve(), 100);
-
-            })).then(function () {
-                return new Promise((resolve, reject) => {
-                    font = new FontFile(font_master.get(font_name));
-                    orglist = font.getCharList();
-                    appendLog("成功", false);
-                    appendLog("元フォントから" + orglist.length + "文字を読み込みました。");
-                    setTimeout(() => resolve(), 100);
-                });
-
-            }).then(function () {
-                return new Promise((resolve, reject) => {
-                    var subset_list = getSubsetCharList();
-                    var subset_list_filtered = subset_list.filter(a => orglist.includes(a));
-                    var subset_list_error = subset_list.filter(a => !orglist.includes(a));
-                    if (subset_list_error.length > 0) {
-                        appendLog("以下の文字は元フォントに存在しません。生成するサブセットから除外されます。");
-                        subset_list_error.forEach(code => {
-                            appendLog("U+" + toHex(code) + " \"" + String.fromCodePoint(code) + "\"");
-                        });
-                    }
-                    if (subset_list_filtered.length == 0) {
-                        appendLog("サブセットに含める文字がありません。");
-                        throw "aborted";
-                    }
-                    appendLog(subset_list_filtered.length + "文字のサブセットを作成します... ");
-                    generateSubset(font, subset_list_filtered);
-                    setTimeout(() => resolve(), 100);
-                });
-
-            }).then(function () {
-                return new Promise((resolve, reject) => {
-                    appendLog("成功", false);
-                    appendLog("作成したサブセットのデータサイズは" + subset_generator.data.length + "バイトです。");
-                    subset_generator.name = $("#txtSubsetName").val();
-                    appendLog("C言語のソースコードに変換します... ");
-                    setTimeout(() => resolve(), 100);
-                });
-
-            }).then(function () {
-                var text = convertToCCode(subset_generator);
-                download_file = new Blob([text], { type: "text/plain;charset=utf-8" });
                 appendLog("成功", false);
-                appendLog("作成したソースコードがダウロードできます。");
-                enableDownload();
-
-            }).catch(function (e) {
-                console.log(e.toString());
-            });
-        });
-
-        // 「ダウンロード」
-        $("#btnDownload").on("click", function () {
-            freeDownloadFileObject();
-            var a = document.createElement("a");
-            a.download = subset_generator.name + ".cpp";
-            download_url = URL.createObjectURL(download_file);
-            console.log("URL: " + download_url);
-            a.href = download_url;
-            a.click();
-        });
-
-        // ファイルから読み込む
-        $("#btnUploadSubset").on("click", function () {
-            showModalWindow("divModalUpload");
-        });
-
-        // 「閉じる」（ファイルから読み込む）
-        $("#btnCloseUpload").on("click", function () {
-            hideModalWindow("divModalUpload");
-        });
-
-        // アップロード
-        $("#fileUpload").on("change", function () {
-            var file = $("#fileUpload").prop('files')[0];
-            var reader = new FileReader();
-            reader.onload = function (arg) {
-                var src_data = arg.target.result;
-                $("#txtSubset").val(src_data);
-                hideModalWindow("divModalUpload");
-                disableDownload();
-            };
-            reader.onerror = function () {
-                alert("ファイルを読み込めませんでした。");
-            };
-            reader.readAsText(file);
-        });
-
-        function isFontNameValid() {
-            return /^((_[0-9]+)|([_A-Za-z]))[_0-9A-Za-z]*$/.test($("#txtSubsetName").val());
-        }
-
-        // フォント名入力チェック
-        $("#txtSubsetName").on("input", function () {
-            disableDownload();
-            if (isFontNameValid()) {
-                $("#txtSubsetName").css("background-color", "white");
-                $("#msgSubsetName").text("");
-            } else {
-                $("#txtSubsetName").css("background-color", "coral");
-                $("#msgSubsetName").text("この名前は使えません");
+                appendLog(
+                  data.length + "バイトのフォントファイルを読み込みました。"
+                );
+                appendLog("フォントファイルを解析しています... ");
+                setTimeout(() => resolve(data), 500);
+              });
+            },
+            function () {
+              appendLog("失敗", false);
+              throw "Error at ajax";
             }
-        });
+          )
+          .then(function (data) {
+            retrieveFonts(data);
+            appendLog("成功", false);
+            appendLog(font_master.size + "個のフォントを読み込みました。");
 
-        // フォント選択変更イベント
-        $("#selFont").on("change", function () {
-            disableDownload();
-        });
+            dictFontName.forEach((font_config, font_name) => {
+              if (font_master.has(font_name)) {
+                $("#selFont").append(
+                  $("<option>").html(font_config.desc).val(font_name)
+                );
+              } else {
+                appendLog('"' + font_config.name + '"が見つかりません。');
+              }
+            });
 
-        // サブセット変更イベント
-        $("#txtSubset").on("input", function () {
-            disableDownload();
-        });
+            $("#selFont").prop("disabled", false);
+            $("#btnShowCharset").prop("disabled", false);
+            $("#btnGenerate").prop("disabled", false);
+          })
+          .catch(() => {
+            hideModalWindow("divModalProgress");
+            appendLog("フォントファイルを読み込めませんでした。");
+          });
+      }
 
+      // 「フォントファイルを選ぶ」
+      $("#btnSelectFontFile").on("click", function () {
+        showModalWindow("divModalFontFile");
+      });
+      $("#txtFontFile").on("click", function () {
+        showModalWindow("divModalFontFile");
+      });
+
+      // 「閉じる」（フォントファイル）
+      $("#btnCloseFontFile").on("click", function () {
+        hideModalWindow("divModalFontFile");
+      });
+
+      // 「IPAフォント」（フォントファイル）
+      $("#btnSelect_IPAFont").on("click", function () {
+        hideModalWindow("divModalFontFile");
+        $("#txtFontFile").val(dictFontFile.IPA.name);
+        dictFontName = dictFontFile.IPA.font_dic;
+        downloadFontFile(dictFontFile.IPA.URL);
+      });
+
+      // 「efont」（フォントファイル）
+      $("#btnSelect_efont").on("click", function () {
+        hideModalWindow("divModalFontFile");
+        $("#txtFontFile").val(dictFontFile.efont.name);
+        dictFontName = dictFontFile.efont.font_dic;
+        downloadFontFile(dictFontFile.efont.URL);
+      });
+
+      // 「文字セットを見る」
+      $("#btnShowCharset").on("click", function () {
+        var font_name;
+        var charlist;
+        new Promise((resolve, reject) => {
+          font_name = $("#selFont").val();
+          appendLog(
+            'フォント"' + dictFontName.get(font_name).name + '"を解析します... '
+          );
+          setTimeout(() => resolve(), 100);
+        })
+          .then(function () {
+            return new Promise((resolve, reject) => {
+              var font = new FontFile(font_master.get(font_name));
+              charlist = font.getCharList();
+              appendLog("成功", false);
+              appendLog(charlist.length + "文字を読み込みました。");
+              setTimeout(() => resolve(), 100);
+            });
+          })
+          .then(function () {
+            var content = generateCodeTable(charlist);
+            $("#divFontName").text(dictFontName.get(font_name).name);
+            $("#divCharsetInnerFrame").children().remove();
+            $("#divCharsetInnerFrame").append(content);
+            showModalWindow("divModalCharset");
+          });
+      });
+
+      // 「閉じる」（文字セット）
+      $("#btnCloseCharset").on("click", function () {
+        hideModalWindow("divModalCharset");
+      });
+
+      var download_file = null; // ダウンロード用ファイル(Blob)
+      var download_url = null; // ダウンロードURL(createObjectURLにより生成)
+
+      // ダウンロードURL(download_url)を開放
+      function freeDownloadFileObject() {
+        if (download_url != null) {
+          URL.revokeObjectURL(download_url);
+          download_url = null;
+        }
+      }
+
+      // UIをダウンロード可/不可に変更
+      function enableDownload(flag = true) {
+        $("#btnDownload").prop("disabled", !flag);
+      }
+      function disableDownload(flag = true) {
+        $("#btnDownload").prop("disabled", flag);
+      }
+
+      // 「生成」
+      $("#btnGenerate").on("click", function () {
+        freeDownloadFileObject();
+        disableDownload();
+        var font_name;
+        var font;
+        var orglist;
+        new Promise((resolve, reject) => {
+          clearLog();
+          subset_generator = null;
+          if (!isFontNameValid()) {
+            appendLog("フォントの名前を正しく入力してください。");
+            throw "error";
+          }
+          font_name = $("#selFont").val();
+          appendLog(
+            '元フォント"' +
+              dictFontName.get(font_name).name +
+              '"からサブセットを作成します。'
+          );
+          appendLog("元フォントを解析します... ");
+          setTimeout(() => resolve(), 100);
+        })
+          .then(function () {
+            return new Promise((resolve, reject) => {
+              font = new FontFile(font_master.get(font_name));
+              orglist = font.getCharList();
+              appendLog("成功", false);
+              appendLog(
+                "元フォントから" + orglist.length + "文字を読み込みました。"
+              );
+              setTimeout(() => resolve(), 100);
+            });
+          })
+          .then(function () {
+            return new Promise((resolve, reject) => {
+              var subset_list = getSubsetCharList();
+              var subset_list_filtered = subset_list.filter((a) =>
+                orglist.includes(a)
+              );
+              var subset_list_error = subset_list.filter(
+                (a) => !orglist.includes(a)
+              );
+              if (subset_list_error.length > 0) {
+                appendLog(
+                  "以下の文字は元フォントに存在しません。生成するサブセットから除外されます。"
+                );
+                subset_list_error.forEach((code) => {
+                  appendLog(
+                    "U+" + toHex(code) + ' "' + String.fromCodePoint(code) + '"'
+                  );
+                });
+              }
+              if (subset_list_filtered.length == 0) {
+                appendLog("サブセットに含める文字がありません。");
+                throw "aborted";
+              }
+              appendLog(
+                subset_list_filtered.length + "文字のサブセットを作成します... "
+              );
+              generateSubset(font, subset_list_filtered);
+              setTimeout(() => resolve(), 100);
+            });
+          })
+          .then(function () {
+            return new Promise((resolve, reject) => {
+              appendLog("成功", false);
+              appendLog(
+                "作成したサブセットのデータサイズは" +
+                  subset_generator.data.length +
+                  "バイトです。"
+              );
+              subset_generator.name = $("#txtSubsetName").val();
+              appendLog("C言語のソースコードに変換します... ");
+              setTimeout(() => resolve(), 100);
+            });
+          })
+          .then(function () {
+            var text = convertToCCode(subset_generator);
+            download_file = new Blob([text], {
+              type: "text/plain;charset=utf-8",
+            });
+            appendLog("成功", false);
+            appendLog("作成したソースコードがダウロードできます。");
+            enableDownload();
+          })
+          .catch(function (e) {
+            console.log(e.toString());
+          });
+      });
+
+      // 「ダウンロード」
+      $("#btnDownload").on("click", function () {
+        freeDownloadFileObject();
+        var a = document.createElement("a");
+        a.download = subset_generator.name + ".cpp";
+        download_url = URL.createObjectURL(download_file);
+        console.log("URL: " + download_url);
+        a.href = download_url;
+        a.click();
+      });
+
+      // ファイルから読み込む
+      $("#btnUploadSubset").on("click", function () {
+        showModalWindow("divModalUpload");
+      });
+
+      // 「閉じる」（ファイルから読み込む）
+      $("#btnCloseUpload").on("click", function () {
+        hideModalWindow("divModalUpload");
+      });
+
+      // アップロード
+      $("#fileUpload").on("change", function () {
+        var file = $("#fileUpload").prop("files")[0];
+        var reader = new FileReader();
+        reader.onload = function (arg) {
+          var src_data = arg.target.result;
+          $("#txtSubset").val(src_data);
+          hideModalWindow("divModalUpload");
+          disableDownload();
+        };
+        reader.onerror = function () {
+          alert("ファイルを読み込めませんでした。");
+        };
+        reader.readAsText(file);
+      });
+
+      function isFontNameValid() {
+        return /^((_[0-9]+)|([_A-Za-z]))[_0-9A-Za-z]*$/.test(
+          $("#txtSubsetName").val()
+        );
+      }
+
+      // フォント名入力チェック
+      $("#txtSubsetName").on("input", function () {
+        disableDownload();
+        if (isFontNameValid()) {
+          $("#txtSubsetName").css("background-color", "white");
+          $("#msgSubsetName").text("");
+        } else {
+          $("#txtSubsetName").css("background-color", "coral");
+          $("#msgSubsetName").text("この名前は使えません");
+        }
+      });
+
+      // フォント選択変更イベント
+      $("#selFont").on("change", function () {
+        disableDownload();
+      });
+
+      // サブセット変更イベント
+      $("#txtSubset").on("input", function () {
+        disableDownload();
+      });
     </script>
-</body>
+  </body>
 </html>
